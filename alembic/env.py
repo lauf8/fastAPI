@@ -8,6 +8,7 @@ from sqlmodel import SQLModel
 
 from app.models.user import User
 from app.models.revoked_token import RevokedToken
+from app.models.company import Company
 
 
 config = context.config
