@@ -5,7 +5,7 @@ from passlib.context import CryptContext
 import os
 
 
-SECRET_KEY = 'test'
+SECRET_KEY = os.environ["SECRET_KEY"]
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
