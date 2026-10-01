@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query
 from sqlmodel import Session, select
-
+from app.dependencies.auth import get_current_user
 from app.database import get_session
 from app.models.user import User
 from app.schemas.users import UserCreate, UserResponse, PaginatedUsersResponse
@@ -26,6 +26,7 @@ def list_users(
     page: int = Query(default=1, ge=1),
     per_page: int = Query(default=10, ge=1, le=100),
     session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
 ):
     repository = UserRepository(session)
 

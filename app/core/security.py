@@ -1,8 +1,9 @@
+import os
+import uuid
 from datetime import datetime, timedelta, timezone
 
 from jose import jwt
 from passlib.context import CryptContext
-import os
 
 
 SECRET_KEY = os.environ["SECRET_KEY"]
@@ -21,11 +22,18 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 
 def create_access_token(subject: str) -> str:
-    expires_at = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    expires_at = datetime.now(timezone.utc) + timedelta(
+        minutes=ACCESS_TOKEN_EXPIRE_MINUTES
+    )
 
     payload = {
         "sub": subject,
+        "jti": str(uuid.uuid4()),
         "exp": expires_at,
     }
 
     return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+
+
+def decode_access_token(token: str) -> dict:
+    return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
