@@ -1,9 +1,13 @@
-from sqlmodel import SQLModel
+from sqlmodel import SQLModel, Field
+from pydantic import EmailStr
 
 
 class UserCreate(SQLModel):
     name: str
-    email: str
+    email: EmailStr
+    password: str = Field(min_length=6, max_length=72)
+    address: str | None = None
+    phone: str | None = None
 
 
 class UserResponse(SQLModel):

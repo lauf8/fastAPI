@@ -7,3 +7,4 @@ class User(SQLModel, table=True):
     email: str = Field(index=True, unique=True)
     phone: str | None = None
     address: str | None = None
+    hashed_password:str

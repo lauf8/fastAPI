@@ -7,7 +7,7 @@ from app.database import get_session
 from app.models.user import User
 from app.schemas.users import UserCreate, UserResponse, PaginatedUsersResponse
 from app.repositories.user_repository import UserRepository
-
+from app.services.user_service import UserService
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -16,15 +16,10 @@ SessionDep = Annotated[Session, Depends(get_session)]
 
 
 @router.post("/", response_model=UserResponse)
-def create_user(data: UserCreate, session: SessionDep):
-    user = User.model_validate(data)
+def create_user(user_data: UserCreate, session: Session = Depends(get_session)):
+    user_service = UserService(session)
 
-    session.add(user)
-    session.commit()
-    session.refresh(user)
-
-    return user
-
+    return user_service.create_user(user_data)
 
 @router.get("/", response_model=PaginatedUsersResponse)
 def list_users(
