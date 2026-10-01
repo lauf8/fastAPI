@@ -1,10 +1,11 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError
-from sqlmodel import Session
+from sqlmodel import Session, select
 
 from app.core.security import decode_access_token
 from app.database import get_session
+from app.models.revoked_token import RevokedToken
 from app.models.user import User
 
 
@@ -24,11 +25,21 @@ def get_current_user(
         )
 
     user_id = payload.get("sub")
+    jti = payload.get("jti")
 
-    if not user_id:
+    if not user_id or not jti:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid token",
+        )
+
+    revoked_statement = select(RevokedToken).where(RevokedToken.jti == jti)
+    revoked_token = session.exec(revoked_statement).first()
+
+    if revoked_token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token has been revoked",
         )
 
     user = session.get(User, int(user_id))
