@@ -1,6 +1,6 @@
-# FastAPI + PostgreSQL
+# FastAPI + PostgreSQL + Alembic + SQLModel
 
-Ambiente de desenvolvimento com Python 3.13, PostgreSQL 17 e reload automático.
+Ambiente de desenvolvimento com Python 3.13, PostgreSQL 17, SQLModel como ORM ,Alembic para gerenciar gerenciar as migrations e reload automático.
 
 ```bash
 cp .env.example .env
